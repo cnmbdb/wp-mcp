@@ -1,9 +1,6 @@
 services:
   wordpress-mcp:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: wordpress-mcp-server:local
+    image: ${MCP_IMAGE:-ghcr.io/cnmbdb/wp-mcp:latest}
     container_name: wordpress-mcp-server
     restart: unless-stopped
     env_file:

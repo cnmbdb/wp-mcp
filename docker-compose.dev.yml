@@ -1,0 +1,10 @@
+services:
+  wordpress-mcp:
+    image: ${MCP_DEV_IMAGE:-ghcr.io/cnmbdb/wp-mcp:dev}
+    pull_policy: always
+    command: ["npm", "run", "dev"]
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./src:/app/src:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro

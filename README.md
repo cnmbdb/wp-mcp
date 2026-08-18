@@ -51,6 +51,9 @@ cp .env.example .env
 ./deploy.sh
 ```
 
+默认从 `ghcr.io/cnmbdb/wp-mcp:latest` 拉取生产镜像。可通过
+`MCP_IMAGE` 环境变量固定到版本或提交 SHA 标签。
+
 检查状态：
 
 ```bash
@@ -60,6 +63,20 @@ docker compose logs -f wordpress-mcp
 ```
 
 默认 MCP 地址：`http://127.0.0.1:3000/mcp`。
+
+### 本地开发：远程镜像 + Compose 补丁 + 源码挂载
+
+GitHub Actions 同时发布 `latest` 生产镜像与 `dev` 开发镜像。本机不重复构建
+基础镜像，使用第二个 Compose 文件补丁服务命令，并把本地源码只读挂载进容器：
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml pull
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f wordpress-mcp
+```
+
+`tsx watch` 会监控挂载的 `src/`。若需要固定开发镜像，可设置
+`MCP_DEV_IMAGE=ghcr.io/cnmbdb/wp-mcp:dev-sha-<commit>`。
 
 Compose 默认通过 `BIND_ADDRESS=127.0.0.1` 只监听本机。若使用反向代理，保持该默认值即可；只有明确需要局域网直连时才改成 `0.0.0.0`，并同时启用 MCP 鉴权。
 

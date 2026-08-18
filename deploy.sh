@@ -12,7 +12,8 @@ if grep -q 'WP_URL=https://example.com' .env; then
   exit 1
 fi
 
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 docker compose ps
 echo "Health: http://127.0.0.1:${PORT:-3000}/health"
 echo "MCP:    http://127.0.0.1:${PORT:-3000}/mcp"
